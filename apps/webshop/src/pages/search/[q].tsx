@@ -28,9 +28,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
           price
           imageUrl
           category
-          description
           stock
-          createdAt
         }
       }
     `, { q });

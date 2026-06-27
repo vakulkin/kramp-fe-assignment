@@ -26,10 +26,6 @@ export const useSearchStore = create<SearchState>((set) => {
             id
             name
             price
-            imageUrl
-            description
-            stock
-            createdAt
           }
         }
       `, { q: query });

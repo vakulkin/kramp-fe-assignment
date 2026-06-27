@@ -12,9 +12,7 @@ export const getStaticProps: GetStaticProps = async () => {
           price
           imageUrl
           category
-          description
           stock
-          createdAt
         }
       }
     `, { q: '' });
