@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import { CartContext } from '../_app';
+import { formatPrice } from '../../utils/formatPrice';
 import styles from './[id].module.css';
 
 export default function ProductPage() {
@@ -67,7 +68,7 @@ export default function ProductPage() {
         <div className={styles.details}>
           <p className={styles.category}>{product!.category}</p>
           <h1 className={styles.name}>{product!.name}</h1>
-          <p className={styles.price}>€{product!.price.toFixed(2)}</p>
+          <p className={styles.price}>{formatPrice(product!.price)}</p>
           <p className={styles.description}>{product!.description}</p>
           <p className={styles.meta}>
             Listed: {new Date(product!.createdAt).toLocaleDateString()}

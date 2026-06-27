@@ -3,7 +3,7 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { createContext } from 'react';
 import { useCart } from '../hooks/useCart';
-import { Header } from '../components/Header';
+import { Header } from '../components/widgets/header/Header';
 import './styles.css';
 
 export const CartContext = createContext<any>(null);

@@ -1,0 +1,12 @@
+.empty {
+  text-align: center;
+  padding: 48px 0;
+  color: #666;
+}
+
+.continueLink {
+  display: block;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}

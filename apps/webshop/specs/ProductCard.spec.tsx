@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import ProductCard from '../src/components/ProductCard';
+import ProductCard from '../src/components/shop/product-card/ProductCard';
 
 jest.mock('next/router', () => ({
   useRouter: () => ({

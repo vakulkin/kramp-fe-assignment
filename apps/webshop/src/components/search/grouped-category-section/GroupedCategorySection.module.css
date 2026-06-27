@@ -1,24 +1,3 @@
-.page {
-  min-height: 60vh;
-}
-
-.inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 32px 24px;
-}
-
-.heading {
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 24px;
-}
-
-.empty {
-  color: #666;
-  font-size: 16px;
-}
-
 .category {
   margin-bottom: 40px;
 }

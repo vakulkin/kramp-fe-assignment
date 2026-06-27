@@ -2,10 +2,10 @@ import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import _ from 'lodash';
-import { CartContext } from '../pages/_app';
-import { SearchDialog } from './SearchDialog';
-import { CartIcon } from './cartIcon';
-import { useDebounce } from '../hooks/useDebounce';
+import { CartContext } from '../../../pages/_app';
+import { SearchDialog } from '../search/search-dialog/SearchDialog';
+import { CartIcon } from '../cart-icon/CartIcon';
+import { useDebounce } from '../../../hooks/useDebounce';
 import styles from './Header.module.css';
 
 export function Header() {

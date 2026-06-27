@@ -1,0 +1,29 @@
+.confirmedItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.confirmedItem:last-child {
+  margin-bottom: 0;
+}
+
+.itemName {
+  flex: 1;
+  font-size: 15px;
+}
+
+.itemQty {
+  font-size: 14px;
+  color: #666;
+  margin: 0 16px;
+}
+
+.itemPrice {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
