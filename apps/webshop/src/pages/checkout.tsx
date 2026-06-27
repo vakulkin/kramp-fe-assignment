@@ -22,7 +22,7 @@ interface CartDetails {
 
 export default function CheckoutPage() {
   const { cart } = useContext(CartContext) as any;
-  const [confirmed, setConfirmed] = useState(false);
+  const [placedOrder, setPlacedOrder] = useState<any>(null);
   const [cartDetails, setCartDetails] = useState<CartDetails | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
@@ -90,6 +90,13 @@ export default function CheckoutPage() {
           mutation PlaceOrder($items: [CartItemInput!]!) {
             createOrder(items: $items) {
               id
+              items {
+                productId
+                name
+                price
+                quantity
+                total
+              }
               subtotal
               tax
               shipping
@@ -121,8 +128,8 @@ export default function CheckoutPage() {
             '| order id (uuidv7):',
             order.id
           );
+          setPlacedOrder(order);
           cart.clearCart();
-          setConfirmed(true);
         }
         setIsPlacingOrder(false);
       })
@@ -132,12 +139,50 @@ export default function CheckoutPage() {
       });
   };
 
-  if (confirmed) {
+  if (placedOrder) {
     return (
       <div className={styles.confirmation}>
-        <h1>Order placed!</h1>
-        <p>Thank you for your order. You will receive a confirmation email shortly.</p>
-        <Link href="/">Continue shopping</Link>
+        <div className={styles.checkmarkIcon}>✓</div>
+        <h1>Order Placed Successfully!</h1>
+        <p className={styles.orderNumber}>
+          Order Number: <code>{placedOrder.id}</code>
+        </p>
+        <div className={styles.orderSummaryCard}>
+          <h3>Order Details Summary</h3>
+          <div className={styles.confirmedItems}>
+            {(placedOrder.items || []).map((item: any) => (
+              <div key={item.productId} className={styles.confirmedItem}>
+                <span className={styles.itemName}>{item.name}</span>
+                <span className={styles.itemQty}>×{item.quantity}</span>
+                <span className={styles.itemPrice}>
+                  €{item.total.toFixed(2)}
+                </span>
+              </div>
+            ))}
+          </div>
+          <div className={styles.summaryRow}>
+            <span>Subtotal</span>
+            <span>€{placedOrder.subtotal.toFixed(2)}</span>
+          </div>
+          <div className={styles.summaryRow}>
+            <span>Shipping</span>
+            <span>{placedOrder.shipping === 0 ? 'Free' : `€${placedOrder.shipping.toFixed(2)}`}</span>
+          </div>
+          <div className={styles.summaryRow}>
+            <span>VAT (21% included)</span>
+            <span>€{placedOrder.tax.toFixed(2)}</span>
+          </div>
+          <div className={styles.totalRow}>
+            <span>Grand Total</span>
+            <strong>€{placedOrder.grandTotal.toFixed(2)}</strong>
+          </div>
+        </div>
+        <p className={styles.thankYouNote}>
+          Thank you for your order. A confirmation email and invoice details will be sent shortly.
+        </p>
+        <Link href="/" className={styles.continueShoppingBtn}>
+          Continue shopping
+        </Link>
       </div>
     );
   }

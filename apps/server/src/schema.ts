@@ -86,6 +86,7 @@ CartDetailsRef.implement({
 
 export interface Order {
   id: string;
+  items: CartItemDetail[];
   subtotal: number;
   tax: number;
   shipping: number;
@@ -96,6 +97,7 @@ const OrderRef = builder.objectRef<Order>('Order');
 OrderRef.implement({
   fields: (t) => ({
     id: t.exposeID('id'),
+    items: t.expose('items', { type: [CartItemDetailRef] }),
     subtotal: t.exposeFloat('subtotal'),
     tax: t.exposeFloat('tax'),
     shipping: t.exposeFloat('shipping'),
@@ -228,6 +230,7 @@ builder.mutationType({
 
         return {
           id,
+          items: totals.items,
           subtotal: totals.subtotal,
           tax: totals.tax,
           shipping: totals.shipping,
