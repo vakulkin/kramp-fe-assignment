@@ -2,14 +2,10 @@ import 'isomorphic-fetch';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { createContext, useState, useEffect } from 'react';
-import { useCart } from '../hooks/useCart';
 import { Header } from '../components/widgets/header/Header';
 import './styles.css';
 
-export const CartContext = createContext<any>(null);
-
 function CustomApp({ Component, pageProps }: AppProps) {
-  const cart = useCart();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searchIsOpen, setSearchIsOpen] = useState(false);
@@ -51,7 +47,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
   }, [searchQuery]);
 
   return (
-    <CartContext.Provider value={{ cart }}>
+    <>
       <Head>
         <title>Kramp Webshop</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -66,7 +62,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
       <main className="app">
         <Component {...pageProps} />
       </main>
-    </CartContext.Provider>
+    </>
   );
 }
 

@@ -1,5 +1,4 @@
-import { useContext } from 'react';
-import { CartContext } from '../../../pages/_app';
+import { useCartStore } from '../../../store/useCartStore';
 import ProductDetails from '../product-details/ProductDetails';
 import styles from './ProductPage.module.css';
 
@@ -8,12 +7,12 @@ interface ProductPageProps {
 }
 
 export default function ProductPage({ product }: ProductPageProps) {
-  const { cart } = useContext(CartContext) as any;
+  const addToCart = useCartStore(state => state.addToCart);
 
   const handleAddToCart = () => {
     if (!product) return;
 
-    cart.addToCart({
+    addToCart({
       productId: product.id,
     });
   };

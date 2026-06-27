@@ -1,7 +1,7 @@
-import { useContext, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { CartContext } from '../../../pages/_app';
+import { useCartStore } from '../../../store/useCartStore';
 import { SearchDialog } from '../search/search-dialog/SearchDialog';
 import { CartIcon } from '../cart-icon/CartIcon';
 import styles from './Header.module.css';
@@ -22,7 +22,12 @@ export function Header({
   setIsOpen,
 }: HeaderProps) {
   const router = useRouter();
-  const { cart } = useContext(CartContext);
+  const totalItems = useCartStore(state => state.totalItems);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleOutsideClick = () => {
@@ -100,7 +105,7 @@ export function Header({
           )}
         </div>
 
-        <CartIcon count={cart.totalItems} />
+        <CartIcon count={mounted ? totalItems : 0} />
       </div>
     </header>
   );

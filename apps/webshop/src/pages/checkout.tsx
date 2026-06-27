@@ -1,17 +1,24 @@
-import { useContext, useState, useEffect } from 'react';
-import { CartContext } from './_app';
+import { useState, useEffect } from 'react';
+import { useCartStore } from '../store/useCartStore';
 import CheckoutPage from '../components/checkout/checkout-page/CheckoutPage';
 
 export default function CheckoutRoute() {
-  const { cart } = useContext(CartContext) as any;
+  const items = useCartStore(state => state.cart);
+  const clearCart = useCartStore(state => state.clearCart);
+  const removeFromCart = useCartStore(state => state.removeFromCart);
+  
   const [placedOrder, setPlacedOrder] = useState<any>(null);
   const [cartDetails, setCartDetails] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
-
-  const items = cart?.cart || [];
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
     if (items.length === 0) {
       setCartDetails(null);
       return;
@@ -111,7 +118,7 @@ export default function CheckoutRoute() {
             order.id
           );
           setPlacedOrder(order);
-          cart.clearCart();
+          clearCart();
         }
         setIsPlacingOrder(false);
       })
@@ -121,6 +128,8 @@ export default function CheckoutRoute() {
       });
   };
 
+  if (!mounted) return null;
+
   return (
     <CheckoutPage
       items={items}
@@ -129,7 +138,7 @@ export default function CheckoutRoute() {
       isLoading={isLoading}
       isPlacingOrder={isPlacingOrder}
       onPlaceOrder={handlePlaceOrder}
-      onRemove={cart?.removeFromCart}
+      onRemove={removeFromCart}
     />
   );
 }
