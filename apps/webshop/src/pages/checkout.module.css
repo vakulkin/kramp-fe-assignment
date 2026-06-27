@@ -134,3 +134,31 @@
   color: #e63329;
   font-weight: 600;
 }
+
+.itemMainInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.itemActions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.removeButton {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.removeButton:hover {
+  color: #e63329;
+  background-color: #ffebeb;
+}

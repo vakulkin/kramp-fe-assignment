@@ -161,11 +161,22 @@ export default function CheckoutPage() {
             <div className={styles.items}>
               {cartDetails.items.map((item: CartItemDetail) => (
                 <div key={item.productId} className={styles.item}>
-                  <span className={styles.itemName}>{item.name}</span>
-                  <span className={styles.itemQty}>×{item.quantity}</span>
-                  <span className={styles.itemPrice}>
-                    €{item.total.toFixed(2)}
-                  </span>
+                  <div className={styles.itemMainInfo}>
+                    <span className={styles.itemName}>{item.name}</span>
+                    <span className={styles.itemQty}>×{item.quantity}</span>
+                  </div>
+                  <div className={styles.itemActions}>
+                    <span className={styles.itemPrice}>
+                      €{item.total.toFixed(2)}
+                    </span>
+                    <button
+                      className={styles.removeButton}
+                      onClick={() => cart.removeFromCart(item.productId)}
+                      aria-label={`Remove ${item.name} from cart`}
+                    >
+                      Remove
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
