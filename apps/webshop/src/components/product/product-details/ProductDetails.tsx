@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { SEO } from '../../widgets/seo/SEO';
 import { formatPrice } from '../../../utils/formatPrice';
@@ -21,6 +22,11 @@ interface ProductDetailsProps {
 
 export default function ProductDetails({ product }: ProductDetailsProps) {
   console.log('[ProductDetails] render');
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Only the action (stable Zustand ref) is read — adding to cart won't re-render this.
   const addToCart = useCartStore((state) => state.addToCart);
@@ -49,7 +55,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           <p className={styles.price}>{formatPrice(product.price)}</p>
           <p className={styles.description}>{product.description}</p>
           <p className={styles.meta}>
-            Listed: {new Date(product.createdAt).toLocaleDateString('en-GB')}
+            Listed: {mounted ? new Date(product.createdAt).toLocaleDateString('en-GB') : ''}
             {' · '}
             {product.stock} in stock
           </p>
