@@ -6,3 +6,8 @@ tmp/
 # Next.js
 .next
 out
+
+*.env
+*.env.example
+*.env.local
+*.env.staging
