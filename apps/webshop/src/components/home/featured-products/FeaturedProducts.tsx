@@ -15,8 +15,8 @@ export default function FeaturedProducts({ featured }: FeaturedProductsProps) {
         </p>
       </div>
       <div className={styles.grid}>
-        {featured.map((product, index) => (
-          <ProductCard key={index} product={product} />
+        {featured.map((product) => (
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
     </section>

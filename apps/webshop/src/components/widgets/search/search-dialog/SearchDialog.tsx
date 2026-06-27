@@ -11,9 +11,9 @@ export function SearchDialog({ results, onSelect }: SearchDialogProps) {
 
   return (
     <div className={styles.dialog}>
-      {results.map((result, index) => (
+      {results.map((result) => (
         <div
-          key={index}
+          key={result.id}
           className={styles.item}
           onClick={() => onSelect(result.id)}
         >
