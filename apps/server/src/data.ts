@@ -34,5 +34,10 @@ export function getProductById(id: string): Product | undefined {
 
 export function searchProducts(query: string): Product[] {
   const all = getAllProducts();
-  return all.filter(p => p.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+  const lowerQuery = query.toLowerCase();
+  return all.filter(p => 
+    p.name.toLowerCase().indexOf(lowerQuery) !== -1 ||
+    p.category.toLowerCase().indexOf(lowerQuery) !== -1 ||
+    p.description.toLowerCase().indexOf(lowerQuery) !== -1
+  );
 }

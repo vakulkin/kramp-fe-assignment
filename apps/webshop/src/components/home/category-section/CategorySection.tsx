@@ -6,7 +6,7 @@ export default function CategorySection() {
       <h2>Shop by category</h2>
       <div className={styles.categoryGrid}>
         {['Tools', 'Fasteners', 'Safety Equipment', 'Power Tools'].map((cat) => (
-          <a key={cat} href={`/search?q=${cat}`} className={styles.categoryCard}>
+          <a key={cat} href={`/search/${cat}`} className={styles.categoryCard}>
             {cat}
           </a>
         ))}
