@@ -6,6 +6,9 @@
     "dev:webshop": "nx dev webshop",
     "dev:server": "nx serve server",
     "dev": "nx run-many --targets=serve,dev --projects=server,webshop --parallel",
+    "build:webshop": "nx build webshop",
+    "build:server": "nx build server",
+    "build": "nx run-many --target=build --projects=server,webshop --parallel",
     "test": "cd apps/webshop && jest --config=jest.config.ts",
     "test:watch": "cd apps/webshop && jest --config=jest.config.ts --watch",
     "storybook": "cd apps/webshop && npx storybook dev -p 6006"
