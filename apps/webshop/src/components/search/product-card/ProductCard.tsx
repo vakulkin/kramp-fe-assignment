@@ -26,6 +26,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         alt={product.name}
         width={300}
         height={200}
+        unoptimized
         className={styles.image}
       />
       <div className={styles.body}>

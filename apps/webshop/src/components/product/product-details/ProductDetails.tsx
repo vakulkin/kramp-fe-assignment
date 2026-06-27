@@ -39,6 +39,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             width={1200}
             height={800}
             priority
+            unoptimized
             className={styles.image}
           />
         </div>
@@ -48,7 +49,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           <p className={styles.price}>{formatPrice(product.price)}</p>
           <p className={styles.description}>{product.description}</p>
           <p className={styles.meta}>
-            Listed: {new Date(product.createdAt).toLocaleDateString()}
+            Listed: {new Date(product.createdAt).toLocaleDateString('en-GB')}
             {' · '}
             {product.stock} in stock
           </p>
