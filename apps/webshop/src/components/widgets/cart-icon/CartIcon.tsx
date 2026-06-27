@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import styles from './CartIcon.module.css';
 
@@ -8,15 +7,7 @@ interface CartIconProps {
 
 export function CartIcon({ count }: CartIconProps) {
   const router = useRouter();
-  const [label, setLabel] = useState('Cart');
-
-  useEffect(() => {
-    if (count > 0) {
-      setLabel(`Cart (${count})`);
-    } else {
-      setLabel('Cart');
-    }
-  }, [count]);
+  const label = count > 0 ? `Cart (${count})` : 'Cart';
 
   return (
     <div
