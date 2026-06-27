@@ -5,18 +5,17 @@ import CategorySection from '../category-section/CategorySection';
 
 interface HomePageProps {
   featured: any[];
-  timestamp: number;
 }
 
-export default function HomePage({ featured, timestamp }: HomePageProps) {
+export default function HomePage({ featured }: HomePageProps) {
   return (
     <div>
-      <SEO 
-        title="Home | Kramp Webshop" 
-        description="Welcome to Kramp Webshop. Discover our featured products and categories." 
+      <SEO
+        title="Home | Kramp Webshop"
+        description="Welcome to Kramp Webshop. Discover our featured products and categories."
       />
       <HeroSection />
-      <FeaturedProducts featured={featured} timestamp={timestamp} />
+      <FeaturedProducts featured={featured} />
       <CategorySection />
     </div>
   );

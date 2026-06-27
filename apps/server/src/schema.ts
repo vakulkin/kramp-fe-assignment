@@ -196,6 +196,20 @@ builder.queryType({
       },
     }),
 
+    featuredProducts: t.field({
+      type: [ProductRef],
+      resolve: async () => {
+        await new Promise(r => setTimeout(r, 800));
+        const ids = (process.env.FEATURED_IDS || '').split(',').filter(Boolean);
+        const results: Product[] = [];
+        for (const id of ids) {
+          const product = getProductById(id);
+          if (product) results.push(product);
+        }
+        return results;
+      },
+    }),
+
     cartDetails: t.field({
       type: CartDetailsRef,
       args: {
