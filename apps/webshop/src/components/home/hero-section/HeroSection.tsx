@@ -1,7 +1,11 @@
 import Image from 'next/image';
 import styles from './HeroSection.module.css';
 
+console.log('[HeroSection] module loaded');
+
 export default function HeroSection() {
+  console.log('[HeroSection] render');
+
   return (
     <section className={styles.hero}>
       <Image

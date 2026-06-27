@@ -1,10 +1,16 @@
+import { memo } from 'react';
 import Link from 'next/link';
 import styles from './SearchDialog.module.css';
 import { formatPrice } from '../../../../utils/formatPrice';
 import { useSearchStore } from '../../../../store/useSearchStore';
 
-export function SearchDialog() {
-  const { results, resetSearch } = useSearchStore();
+console.log('[SearchDialog] module loaded');
+
+export const SearchDialog = memo(function SearchDialog() {
+  console.log('[SearchDialog] render');
+
+  const results = useSearchStore((state) => state.results);
+  const resetSearch = useSearchStore((state) => state.resetSearch);
 
   if (!results.length) return null;
 
@@ -24,4 +30,4 @@ export function SearchDialog() {
       ))}
     </div>
   );
-}
+});

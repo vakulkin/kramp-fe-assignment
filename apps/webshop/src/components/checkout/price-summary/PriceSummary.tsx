@@ -1,5 +1,8 @@
+import { memo } from 'react';
 import { formatPrice } from '../../../utils/formatPrice';
 import styles from './PriceSummary.module.css';
+
+console.log('[PriceSummary] module loaded');
 
 interface PriceSummaryProps {
   subtotal: number;
@@ -10,7 +13,8 @@ interface PriceSummaryProps {
   totalClassName?: string;
 }
 
-export default function PriceSummary({
+// memo: only re-renders when price values change. Shared by CartSummary and OrderConfirmation.
+const PriceSummary = memo(function PriceSummary({
   subtotal,
   shipping,
   tax,
@@ -18,6 +22,8 @@ export default function PriceSummary({
   totalLabel = 'Total',
   totalClassName = styles.total,
 }: PriceSummaryProps) {
+  console.log('[PriceSummary] render');
+
   return (
     <>
       <div className={styles.summaryRow}>
@@ -38,4 +44,6 @@ export default function PriceSummary({
       </div>
     </>
   );
-}
+});
+
+export default PriceSummary;

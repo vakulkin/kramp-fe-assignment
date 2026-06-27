@@ -1,6 +1,10 @@
 import styles from './CategorySection.module.css';
 
+console.log('[CategorySection] module loaded');
+
 export default function CategorySection() {
+  console.log('[CategorySection] render');
+
   return (
     <section className={styles.categories}>
       <h2>Shop by category</h2>

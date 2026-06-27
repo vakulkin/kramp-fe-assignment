@@ -1,13 +1,18 @@
+import { Product } from '../../../types';
 import { SEO } from '../../widgets/seo/SEO';
 import HeroSection from '../hero-section/HeroSection';
 import FeaturedProducts from '../featured-products/FeaturedProducts';
 import CategorySection from '../category-section/CategorySection';
 
+console.log('[HomePage] module loaded');
+
 interface HomePageProps {
-  featured: any[];
+  featured: Product[];
 }
 
 export default function HomePage({ featured }: HomePageProps) {
+  console.log('[HomePage] render');
+
   return (
     <div>
       <SEO

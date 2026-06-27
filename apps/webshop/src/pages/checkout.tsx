@@ -1,19 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useCartStore } from '../store/useCartStore';
+import { CartDetails, Order } from '../types';
 import CheckoutPage from '../components/checkout/checkout-page/CheckoutPage';
 import { fetchGraphQL } from '../utils/fetchGraphQL';
 import { formatPrice } from '../utils/formatPrice';
+
 export default function CheckoutRoute() {
   const items = useCartStore(state => state.cart);
   const clearCart = useCartStore(state => state.clearCart);
   const removeFromCart = useCartStore(state => state.removeFromCart);
 
-  const [placedOrder, setPlacedOrder] = useState<any>(null);
-  const [cartDetails, setCartDetails] = useState<any>(null);
+  const [placedOrder, setPlacedOrder] = useState<Order | null>(null);
+  const [cartDetails, setCartDetails] = useState<CartDetails | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [mounted, setMounted] = useState(false);
-
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -30,9 +31,9 @@ export default function CheckoutRoute() {
     const fetchCartDetails = async () => {
       setIsLoading(true);
       setError(null);
-      
+
       try {
-        const data = await fetchGraphQL<{ cartDetails: any }>(`
+        const data = await fetchGraphQL<{ cartDetails: CartDetails }>(`
           query GetCartDetails($items: [CartItemInput!]!) {
             cartDetails(items: $items) {
               items {
@@ -49,7 +50,7 @@ export default function CheckoutRoute() {
             }
           }
         `, {
-          items: items.map((i: any) => ({
+          items: items.map((i) => ({
             productId: i.productId,
             quantity: i.quantity,
           })),
@@ -57,10 +58,10 @@ export default function CheckoutRoute() {
 
         if (data?.cartDetails) {
           const fetchedItems = data.cartDetails.items;
-          const validProductIds = new Set(fetchedItems.map((i: any) => i.productId));
+          const validProductIds = new Set(fetchedItems.map((i) => i.productId));
 
           let removedCount = 0;
-          items.forEach((localItem: any) => {
+          items.forEach((localItem) => {
             if (!validProductIds.has(localItem.productId)) {
               removeFromCart(localItem.productId);
               removedCount++;
@@ -73,8 +74,8 @@ export default function CheckoutRoute() {
 
           setCartDetails(data.cartDetails);
         }
-      } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Unknown error';
         console.error('Error fetching cart details:', errorMessage);
         setError(errorMessage);
       } finally {
@@ -85,14 +86,14 @@ export default function CheckoutRoute() {
     fetchCartDetails();
   }, [items, mounted]);
 
-  const handlePlaceOrder = async () => {
+  const handlePlaceOrder = useCallback(async () => {
     if (items.length === 0 || isPlacingOrder) return;
 
     setIsPlacingOrder(true);
     setError(null);
 
     try {
-      const data = await fetchGraphQL<{ createOrder: any }>(`
+      const data = await fetchGraphQL<{ createOrder: Order }>(`
         mutation PlaceOrder($items: [CartItemInput!]!) {
           createOrder(items: $items) {
             id
@@ -110,7 +111,7 @@ export default function CheckoutRoute() {
           }
         }
       `, {
-        items: items.map((i: any) => ({
+        items: items.map((i) => ({
           productId: i.productId,
           quantity: i.quantity,
         })),
@@ -119,28 +120,23 @@ export default function CheckoutRoute() {
       const order = data?.createOrder;
       if (order) {
         console.log(
-          'order subtotal:',
-          formatPrice(order.subtotal),
-          '| VAT (21%):',
-          formatPrice(order.tax),
-          '| shipping:',
-          formatPrice(order.shipping),
-          '| grand total:',
-          formatPrice(order.grandTotal),
-          '| order id (uuidv7):',
-          order.id
+          'order subtotal:', formatPrice(order.subtotal),
+          '| VAT (21%):', formatPrice(order.tax),
+          '| shipping:', formatPrice(order.shipping),
+          '| grand total:', formatPrice(order.grandTotal),
+          '| order id (uuidv7):', order.id
         );
         setPlacedOrder(order);
         clearCart();
       }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
       console.error('Error placing order:', errorMessage);
       setError(errorMessage);
     } finally {
       setIsPlacingOrder(false);
     }
-  };
+  }, [items, isPlacingOrder, clearCart]);
 
   if (!mounted) return null;
 

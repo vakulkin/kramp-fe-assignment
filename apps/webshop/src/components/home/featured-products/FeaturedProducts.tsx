@@ -1,11 +1,16 @@
+import { Product } from '../../../types';
 import ProductCard from '../../search/product-card/ProductCard';
 import styles from './FeaturedProducts.module.css';
 
+console.log('[FeaturedProducts] module loaded');
+
 interface FeaturedProductsProps {
-  featured: any[];
+  featured: Product[];
 }
 
 export default function FeaturedProducts({ featured }: FeaturedProductsProps) {
+  console.log('[FeaturedProducts] render');
+
   return (
     <section className={styles.featured}>
       <div className={styles.featuredHeader}>

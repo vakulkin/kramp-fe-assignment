@@ -1,13 +1,19 @@
+import { memo } from 'react';
 import Link from 'next/link';
+import { Order } from '../../../types';
 import ConfirmedItem from '../confirmed-item/ConfirmedItem';
 import PriceSummary from '../price-summary/PriceSummary';
 import styles from './OrderConfirmation.module.css';
 
+console.log('[OrderConfirmation] module loaded');
+
 interface OrderConfirmationProps {
-  placedOrder: any;
+  placedOrder: Order;
 }
 
-export default function OrderConfirmation({ placedOrder }: OrderConfirmationProps) {
+const OrderConfirmation = memo(function OrderConfirmation({ placedOrder }: OrderConfirmationProps) {
+  console.log('[OrderConfirmation] render');
+
   return (
     <div className={styles.confirmation}>
       <div className={styles.checkmarkIcon}>✓</div>
@@ -18,7 +24,7 @@ export default function OrderConfirmation({ placedOrder }: OrderConfirmationProp
       <div className={styles.orderSummaryCard}>
         <h3>Order Details Summary</h3>
         <div className={styles.confirmedItems}>
-          {(placedOrder.items || []).map((item: any) => (
+          {placedOrder.items.map((item) => (
             <ConfirmedItem key={item.productId} item={item} />
           ))}
         </div>
@@ -39,4 +45,6 @@ export default function OrderConfirmation({ placedOrder }: OrderConfirmationProp
       </Link>
     </div>
   );
-}
+});
+
+export default OrderConfirmation;

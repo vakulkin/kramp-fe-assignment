@@ -1,12 +1,13 @@
 import { GetStaticProps } from 'next';
+import { Product } from '../types';
 import HomePage from '../components/home/home-page/HomePage';
 import { fetchGraphQL } from '../utils/fetchGraphQL';
 
-export const getStaticProps: GetStaticProps = async () => {
-  const featured = [];
+export const getStaticProps: GetStaticProps<{ featured: Product[] }> = async () => {
+  const featured: Product[] = [];
 
   try {
-    const data = await fetchGraphQL<{ featuredProducts: any[] }>(`
+    const data = await fetchGraphQL<{ featuredProducts: Product[] }>(`
       query GetFeaturedProducts {
         featuredProducts {
           id

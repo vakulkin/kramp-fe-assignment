@@ -1,21 +1,21 @@
+import { memo, useCallback } from 'react';
+import { CartItemDetail } from '../../../types';
 import { formatPrice } from '../../../utils/formatPrice';
 import styles from './CartItem.module.css';
 
-export interface CartItemDetail {
-  productId: string;
-  name: string;
-  price: number;
-  quantity: number;
-  total: number;
-  imageUrl?: string;
-}
+console.log('[CartItem] module loaded');
 
 interface CartItemProps {
   item: CartItemDetail;
   onRemove: (productId: string) => void;
 }
 
-export default function CartItem({ item, onRemove }: CartItemProps) {
+const CartItem = memo(function CartItem({ item, onRemove }: CartItemProps) {
+  console.log('[CartItem] render', item.productId);
+
+  const handleRemove = useCallback(() => {
+    onRemove(item.productId);
+  }, [onRemove, item.productId]);
 
   return (
     <div className={styles.item}>
@@ -27,7 +27,7 @@ export default function CartItem({ item, onRemove }: CartItemProps) {
         <span className={styles.itemPrice}>{formatPrice(item.total)}</span>
         <button
           className={styles.removeButton}
-          onClick={() => onRemove(item.productId)}
+          onClick={handleRemove}
           aria-label={`Remove ${item.name} from cart`}
         >
           Remove
@@ -35,4 +35,6 @@ export default function CartItem({ item, onRemove }: CartItemProps) {
       </div>
     </div>
   );
-}
+});
+
+export default CartItem;

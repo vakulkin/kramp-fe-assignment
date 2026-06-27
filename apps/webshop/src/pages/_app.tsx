@@ -4,7 +4,11 @@ import { Header } from '../components/widgets/header/Header';
 import { SEO } from '../components/widgets/seo/SEO';
 import './styles.css';
 
+console.log('[App] module loaded');
+
 function App({ Component, pageProps }: AppProps) {
+  console.log('[App] render');
+
   return (
     <>
       <SEO />
@@ -20,4 +24,3 @@ function App({ Component, pageProps }: AppProps) {
 }
 
 export default App;
-

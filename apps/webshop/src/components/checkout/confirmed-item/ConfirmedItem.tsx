@@ -1,11 +1,17 @@
+import { memo } from 'react';
+import { OrderItem } from '../../../types';
 import { formatPrice } from '../../../utils/formatPrice';
 import styles from './ConfirmedItem.module.css';
 
+console.log('[ConfirmedItem] module loaded');
+
 interface ConfirmedItemProps {
-  item: any;
+  item: OrderItem;
 }
 
-export default function ConfirmedItem({ item }: ConfirmedItemProps) {
+const ConfirmedItem = memo(function ConfirmedItem({ item }: ConfirmedItemProps) {
+  console.log('[ConfirmedItem] render', item.productId);
+
   return (
     <div className={styles.confirmedItem}>
       <span className={styles.itemName}>{item.name}</span>
@@ -13,4 +19,6 @@ export default function ConfirmedItem({ item }: ConfirmedItemProps) {
       <span className={styles.itemPrice}>{formatPrice(item.total)}</span>
     </div>
   );
-}
+});
+
+export default ConfirmedItem;

@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+import { SearchResult } from '../../../types';
 import { SEO } from '../../widgets/seo/SEO';
 import { groupBy } from '../../../utils/groupBy';
 import SearchHeader from '../search-header/SearchHeader';
@@ -5,13 +7,17 @@ import NoResultsFound from '../no-results-found/NoResultsFound';
 import GroupedCategorySection from '../grouped-category-section/GroupedCategorySection';
 import styles from './SearchPage.module.css';
 
+console.log('[SearchPage] module loaded');
+
 interface SearchPageProps {
   query: string;
-  results: any[];
+  results: SearchResult[];
 }
 
 export default function SearchPage({ query, results }: SearchPageProps) {
-  const grouped = groupBy(results, 'category');
+  console.log('[SearchPage] render');
+
+  const grouped = useMemo(() => groupBy(results, 'category'), [results]);
 
   return (
     <>

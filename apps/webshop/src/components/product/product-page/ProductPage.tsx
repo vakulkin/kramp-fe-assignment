@@ -1,11 +1,16 @@
+import { Product } from '../../../types';
 import ProductDetails from '../product-details/ProductDetails';
 import styles from './ProductPage.module.css';
 
+console.log('[ProductPage] module loaded');
+
 interface ProductPageProps {
-  product: any;
+  product: Product;
 }
 
 export default function ProductPage({ product }: ProductPageProps) {
+  console.log('[ProductPage] render');
+
   if (!product) {
     return (
       <div className={styles.page}>
@@ -20,4 +25,3 @@ export default function ProductPage({ product }: ProductPageProps) {
     </div>
   );
 }
-

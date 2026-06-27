@@ -1,12 +1,19 @@
+import { memo } from 'react';
 import Link from 'next/link';
 import styles from './PlaceOrderAction.module.css';
+
+console.log('[PlaceOrderAction] module loaded');
 
 interface PlaceOrderActionProps {
   onPlaceOrder: () => void;
   isPlacingOrder: boolean;
 }
 
-export default function PlaceOrderAction({ onPlaceOrder, isPlacingOrder }: PlaceOrderActionProps) {
+// memo: only re-renders when isPlacingOrder changes or onPlaceOrder ref changes.
+// Parent passes a useCallback-wrapped handler for stability.
+const PlaceOrderAction = memo(function PlaceOrderAction({ onPlaceOrder, isPlacingOrder }: PlaceOrderActionProps) {
+  console.log('[PlaceOrderAction] render');
+
   return (
     <div className={styles.actions}>
       <button
@@ -27,4 +34,6 @@ export default function PlaceOrderAction({ onPlaceOrder, isPlacingOrder }: Place
       <Link href="/" className={styles.continueLink}>Continue shopping</Link>
     </div>
   );
-}
+});
+
+export default PlaceOrderAction;

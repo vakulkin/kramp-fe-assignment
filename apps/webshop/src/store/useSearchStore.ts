@@ -1,13 +1,14 @@
 import { create } from 'zustand';
 import debounce from 'lodash/debounce';
 import { fetchGraphQL } from '../utils/fetchGraphQL';
+import { SearchResult } from '../types';
 
 interface SearchState {
   query: string;
-  results: any[];
+  results: SearchResult[];
   isOpen: boolean;
   setQuery: (query: string) => void;
-  setResults: (results: any[]) => void;
+  setResults: (results: SearchResult[]) => void;
   setIsOpen: (isOpen: boolean) => void;
   resetSearch: () => void;
 }
@@ -20,7 +21,7 @@ export const useSearchStore = create<SearchState>((set) => {
     }
 
     try {
-      const data = await fetchGraphQL<{ searchProducts: any[] }>(`
+      const data = await fetchGraphQL<{ searchProducts: SearchResult[] }>(`
         query Search($q: String!) {
           searchProducts(query: $q) {
             id

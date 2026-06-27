@@ -1,14 +1,20 @@
-import React from 'react';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
+import { SearchResult } from '../../../types';
 import { formatPrice } from '../../../utils/formatPrice';
 import { useCartStore } from '../../../store/useCartStore';
 import styles from './ProductCard.module.css';
 
-const ProductCard: React.FC<any> = ({ product }) => {
-  const router = useRouter();
-  const addToCart = useCartStore(state => state.addToCart);
+console.log('[ProductCard] module loaded');
+
+interface ProductCardProps {
+  product: SearchResult;
+}
+
+export default function ProductCard({ product }: ProductCardProps) {
+  console.log('[ProductCard] render', product.id);
+
+  const addToCart = useCartStore((state) => state.addToCart);
 
   return (
     <div
@@ -36,7 +42,12 @@ const ProductCard: React.FC<any> = ({ product }) => {
           <div
             onClick={() => addToCart({ productId: product.id, stock: product.stock })}
             className={styles.button}
-            style={{ flex: 1, textAlign: 'center', backgroundColor: product.stock <= 0 ? '#ccc' : undefined, cursor: product.stock <= 0 ? 'not-allowed' : 'pointer' }}
+            style={{
+              flex: 1,
+              textAlign: 'center',
+              backgroundColor: product.stock <= 0 ? '#ccc' : undefined,
+              cursor: product.stock <= 0 ? 'not-allowed' : 'pointer',
+            }}
           >
             {product.stock > 0 ? 'Add' : 'Out of stock'}
           </div>
@@ -44,6 +55,4 @@ const ProductCard: React.FC<any> = ({ product }) => {
       </div>
     </div>
   );
-};
-
-export default ProductCard;
+}

@@ -1,18 +1,14 @@
-import { useState, useEffect } from 'react';
-import { useCartStore } from '../../../store/useCartStore';
+import { memo } from 'react';
 import { CartIcon } from '../cart-icon/CartIcon';
 import { HeaderLogo } from './header-logo/HeaderLogo';
 import { HeaderNav } from './header-nav/HeaderNav';
 import { HeaderSearch } from '../search/header-search/HeaderSearch';
 import styles from './Header.module.css';
 
-export function Header() {
-  const totalItems = useCartStore(state => state.totalItems);
-  const [mounted, setMounted] = useState(false);
-  
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+console.log('[Header] module loaded');
+
+export const Header = memo(function Header() {
+  console.log('[Header] render');
 
   return (
     <header className={styles.header}>
@@ -20,9 +16,8 @@ export function Header() {
         <HeaderLogo />
         <HeaderNav />
         <HeaderSearch />
-        <CartIcon count={mounted ? totalItems : 0} />
+        <CartIcon />
       </div>
     </header>
   );
-}
-
+});

@@ -1,5 +1,6 @@
+import { memo } from 'react';
 import { SEO } from '../../widgets/seo/SEO';
-import { CartItemDetail } from '../cart-item/CartItem';
+import { CartItem, CartDetails, Order } from '../../../types';
 import OrderConfirmation from '../order-confirmation/OrderConfirmation';
 import EmptyCart from '../empty-cart/EmptyCart';
 import LoadingCart from '../loading-cart/LoadingCart';
@@ -8,16 +9,12 @@ import CartSummary from '../cart-summary/CartSummary';
 import PlaceOrderAction from '../place-order-action/PlaceOrderAction';
 import styles from './CheckoutPage.module.css';
 
+console.log('[CheckoutPage] module loaded');
+
 interface CheckoutPageProps {
-  items: any[];
-  placedOrder: any;
-  cartDetails: {
-    items: CartItemDetail[];
-    subtotal: number;
-    tax: number;
-    shipping: number;
-    grandTotal: number;
-  } | null;
+  items: CartItem[];
+  placedOrder: Order | null;
+  cartDetails: CartDetails | null;
   isLoading: boolean;
   isPlacingOrder: boolean;
   onPlaceOrder: () => void;
@@ -25,7 +22,8 @@ interface CheckoutPageProps {
   error?: string | null;
 }
 
-export default function CheckoutPage({
+
+const CheckoutPage = memo(function CheckoutPage({
   items,
   placedOrder,
   cartDetails,
@@ -35,6 +33,8 @@ export default function CheckoutPage({
   onRemove,
   error,
 }: CheckoutPageProps) {
+  console.log('[CheckoutPage] render');
+
   if (placedOrder) {
     return (
       <>
@@ -49,39 +49,41 @@ export default function CheckoutPage({
       <SEO title="Checkout | Kramp Webshop" description="Review your items and place your order." />
       <div className={styles.page}>
         <div className={styles.inner}>
-        <h1 className={styles.heading}>Checkout</h1>
+          <h1 className={styles.heading}>Checkout</h1>
 
-        {items.length === 0 ? (
-          <EmptyCart />
-        ) : error ? (
-          <div style={{ color: 'red', marginTop: '20px', padding: '20px', border: '1px solid red', borderRadius: '8px' }}>
-            <h2>Failed to load cart details</h2>
-            <p>{error}</p>
-          </div>
-        ) : isLoading || !cartDetails ? (
-          <LoadingCart />
-        ) : (
-          <>
-            <CartItemList
-              items={cartDetails.items}
-              onRemove={onRemove}
-            />
+          {items.length === 0 ? (
+            <EmptyCart />
+          ) : error ? (
+            <div style={{ color: 'red', marginTop: '20px', padding: '20px', border: '1px solid red', borderRadius: '8px' }}>
+              <h2>Failed to load cart details</h2>
+              <p>{error}</p>
+            </div>
+          ) : isLoading || !cartDetails ? (
+            <LoadingCart />
+          ) : (
+            <>
+              <CartItemList
+                items={cartDetails.items}
+                onRemove={onRemove}
+              />
 
-            <CartSummary
-              subtotal={cartDetails.subtotal}
-              shipping={cartDetails.shipping}
-              tax={cartDetails.tax}
-              grandTotal={cartDetails.grandTotal}
-            />
+              <CartSummary
+                subtotal={cartDetails.subtotal}
+                shipping={cartDetails.shipping}
+                tax={cartDetails.tax}
+                grandTotal={cartDetails.grandTotal}
+              />
 
-            <PlaceOrderAction
-              onPlaceOrder={onPlaceOrder}
-              isPlacingOrder={isPlacingOrder}
-            />
-          </>
-        )}
+              <PlaceOrderAction
+                onPlaceOrder={onPlaceOrder}
+                isPlacingOrder={isPlacingOrder}
+              />
+            </>
+          )}
+        </div>
       </div>
-    </div>
     </>
   );
-}
+});
+
+export default CheckoutPage;
