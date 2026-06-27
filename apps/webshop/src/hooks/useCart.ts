@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import { CartItem } from '../types';
 
 const stored: CartItem[] =
@@ -9,12 +8,6 @@ const stored: CartItem[] =
 
 export function useCart() {
   const [cart, setCart] = useState<CartItem[]>(stored);
-  const [totalPrice, setTotalPrice] = useState<number>(0);
-
-  useEffect(() => {
-    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    setTotalPrice(total);
-  }, [cart]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -22,9 +15,8 @@ export function useCart() {
     }
   });
 
-  const addToCart = (item: Omit<CartItem, 'productId'> & { productId: string }) => {
-    const id = uuidv4();
-    console.log('adding to cart, entry id:', id);
+  const addToCart = (item: { productId: string }) => {
+    console.log('adding product to cart:', item.productId);
 
     setCart(prev => {
       const existing = prev.find(i => i.productId === item.productId);
@@ -33,7 +25,7 @@ export function useCart() {
           i.productId === item.productId ? { ...i, quantity: i.quantity + 1 } : i
         );
       }
-      return [...prev, { ...item }];
+      return [...prev, { productId: item.productId, quantity: 1 }];
     });
   };
 
@@ -47,5 +39,5 @@ export function useCart() {
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-  return { cart, addToCart, removeFromCart, clearCart, totalItems, totalPrice };
+  return { cart, addToCart, removeFromCart, clearCart, totalItems };
 }

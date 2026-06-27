@@ -41,23 +41,8 @@ export default function ProductPage() {
   const handleAddToCart = () => {
     if (!product) return;
 
-    const currentItems = [...(cart.cart || []), {
-      productId: product.id,
-      name: product.name,
-      price: product.price,
-      quantity: 1,
-    }];
-    let runningTotal = 0;
-    for (let i = 0; i < currentItems.length; i++) {
-      runningTotal += currentItems[i].price * currentItems[i].quantity;
-    }
-    console.log('cart total after add:', runningTotal);
-
     cart.addToCart({
       productId: product.id,
-      name: product.name,
-      price: product.price,
-      quantity: 1,
     });
   };
 

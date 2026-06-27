@@ -1,35 +1,135 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { CartContext } from './_app';
 import styles from './checkout.module.css';
 
+interface CartItemDetail {
+  productId: string;
+  name: string;
+  price: number;
+  quantity: number;
+  total: number;
+  imageUrl?: string;
+}
+
+interface CartDetails {
+  items: CartItemDetail[];
+  subtotal: number;
+  tax: number;
+  shipping: number;
+  grandTotal: number;
+}
+
 export default function CheckoutPage() {
   const { cart } = useContext(CartContext) as any;
   const [confirmed, setConfirmed] = useState(false);
+  const [cartDetails, setCartDetails] = useState<CartDetails | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
   const items = cart.cart || [];
-  const subtotal = items.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0);
-  const tax = subtotal * 0.21;
-  const shipping = items.reduce(
-    (acc: number, item: any) => acc + (item.quantity > 5 ? 0 : 4.95),
-    0
-  );
-  const grandTotal = subtotal + shipping;
+
+  useEffect(() => {
+    if (items.length === 0) {
+      setCartDetails(null);
+      return;
+    }
+
+    setIsLoading(true);
+    fetch(process.env.NEXT_PUBLIC_GRAPHQL_URL!, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: `
+          query GetCartDetails($items: [CartItemInput!]!) {
+            cartDetails(items: $items) {
+              items {
+                productId
+                name
+                price
+                quantity
+                total
+              }
+              subtotal
+              tax
+              shipping
+              grandTotal
+            }
+          }
+        `,
+        variables: {
+          items: items.map((i: any) => ({
+            productId: i.productId,
+            quantity: i.quantity,
+          })),
+        },
+      }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.data?.cartDetails) {
+          setCartDetails(data.data.cartDetails);
+        }
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching cart details:', err);
+        setIsLoading(false);
+      });
+  }, [items]);
 
   const handlePlaceOrder = () => {
-    console.log(
-      'order subtotal:',
-      subtotal.toFixed(2),
-      '| VAT (21%):',
-      tax.toFixed(2),
-      '| shipping:',
-      shipping.toFixed(2),
-      '| grand total:',
-      grandTotal.toFixed(2)
-    );
+    if (items.length === 0 || isPlacingOrder) return;
 
-    cart.clearCart();
-    setConfirmed(true);
+    setIsPlacingOrder(true);
+    fetch(process.env.NEXT_PUBLIC_GRAPHQL_URL!, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: `
+          mutation PlaceOrder($items: [CartItemInput!]!) {
+            createOrder(items: $items) {
+              id
+              subtotal
+              tax
+              shipping
+              grandTotal
+            }
+          }
+        `,
+        variables: {
+          items: items.map((i: any) => ({
+            productId: i.productId,
+            quantity: i.quantity,
+          })),
+        },
+      }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        const order = data.data?.createOrder;
+        if (order) {
+          console.log(
+            'order subtotal:',
+            order.subtotal.toFixed(2),
+            '| VAT (21%):',
+            order.tax.toFixed(2),
+            '| shipping:',
+            order.shipping.toFixed(2),
+            '| grand total:',
+            order.grandTotal.toFixed(2),
+            '| order id (uuidv7):',
+            order.id
+          );
+          cart.clearCart();
+          setConfirmed(true);
+        }
+        setIsPlacingOrder(false);
+      })
+      .catch(err => {
+        console.error('Error placing order:', err);
+        setIsPlacingOrder(false);
+      });
   };
 
   if (confirmed) {
@@ -52,15 +152,19 @@ export default function CheckoutPage() {
             <p>Your cart is empty.</p>
             <Link href="/" className={styles.continueLink}>Continue shopping</Link>
           </div>
+        ) : isLoading || !cartDetails ? (
+          <div className={styles.empty}>
+            <p>Loading cart details...</p>
+          </div>
         ) : (
           <>
             <div className={styles.items}>
-              {items.map((item: any, index: number) => (
-                <div key={index} className={styles.item}>
+              {cartDetails.items.map((item: CartItemDetail) => (
+                <div key={item.productId} className={styles.item}>
                   <span className={styles.itemName}>{item.name}</span>
                   <span className={styles.itemQty}>×{item.quantity}</span>
                   <span className={styles.itemPrice}>
-                    €{(item.price * item.quantity).toFixed(2)}
+                    €{item.total.toFixed(2)}
                   </span>
                 </div>
               ))}
@@ -69,29 +173,38 @@ export default function CheckoutPage() {
             <div className={styles.summary}>
               <div className={styles.summaryRow}>
                 <span>Subtotal</span>
-                <span>€{subtotal.toFixed(2)}</span>
+                <span>€{cartDetails.subtotal.toFixed(2)}</span>
               </div>
               <div className={styles.summaryRow}>
                 <span>Shipping</span>
-                <span>{shipping === 0 ? 'Free' : `€${shipping.toFixed(2)}`}</span>
+                <span>{cartDetails.shipping === 0 ? 'Free' : `€${cartDetails.shipping.toFixed(2)}`}</span>
               </div>
               <div className={styles.summaryRow}>
                 <span>VAT (21% included)</span>
-                <span>€{tax.toFixed(2)}</span>
+                <span>€{cartDetails.tax.toFixed(2)}</span>
               </div>
               <div className={styles.total}>
                 <span>Total</span>
-                <strong>€{grandTotal.toFixed(2)}</strong>
+                <strong>€{cartDetails.grandTotal.toFixed(2)}</strong>
               </div>
             </div>
 
             <div className={styles.actions}>
-              <div
+              <button
                 className={styles.placeOrderButton}
                 onClick={handlePlaceOrder}
+                disabled={isPlacingOrder}
+                style={{
+                  width: '100%',
+                  border: 'none',
+                  outline: 'none',
+                  fontFamily: 'inherit',
+                  cursor: isPlacingOrder ? 'not-allowed' : 'pointer',
+                  opacity: isPlacingOrder ? 0.7 : 1,
+                }}
               >
-                Place order
-              </div>
+                {isPlacingOrder ? 'Placing order...' : 'Place order'}
+              </button>
               <Link href="/" className={styles.continueLink}>Continue shopping</Link>
             </div>
           </>
