@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { SEO } from '../../widgets/seo/SEO';
 import { formatPrice } from '../../../utils/formatPrice';
 import { useCartStore } from '../../../store/useCartStore';
@@ -27,9 +28,12 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
       />
       <div className={styles.inner}>
       <div className={styles.imageWrapper}>
-        <img
+        <Image
           src={product.imageUrl}
-          alt=""
+          alt={product.name}
+          width={1200}
+          height={800}
+          priority
           className={styles.image}
         />
       </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import Image from 'next/image';
 import { formatPrice } from '../../../utils/formatPrice';
 import { useCartStore } from '../../../store/useCartStore';
 import styles from './ProductCard.module.css';
@@ -14,11 +15,11 @@ const ProductCard: React.FC<any> = ({ product }) => {
       className={styles.card}
       data-testid="product-card"
     >
-      <img
+      <Image
         src={product.imageUrl}
-        alt=""
-        width="300"
-        height="200"
+        alt={product.name}
+        width={300}
+        height={200}
         className={styles.image}
       />
       <div className={styles.body}>
