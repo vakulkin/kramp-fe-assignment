@@ -21,6 +21,7 @@ interface CheckoutPageProps {
   isPlacingOrder: boolean;
   onPlaceOrder: () => void;
   onRemove: (productId: string) => void;
+  error?: string | null;
 }
 
 export default function CheckoutPage({
@@ -31,6 +32,7 @@ export default function CheckoutPage({
   isPlacingOrder,
   onPlaceOrder,
   onRemove,
+  error,
 }: CheckoutPageProps) {
   if (placedOrder) {
     return <OrderConfirmation placedOrder={placedOrder} />;
@@ -43,6 +45,11 @@ export default function CheckoutPage({
 
         {items.length === 0 ? (
           <EmptyCart />
+        ) : error ? (
+          <div style={{ color: 'red', marginTop: '20px', padding: '20px', border: '1px solid red', borderRadius: '8px' }}>
+            <h2>Failed to load cart details</h2>
+            <p>{error}</p>
+          </div>
         ) : isLoading || !cartDetails ? (
           <LoadingCart />
         ) : (

@@ -1,5 +1,6 @@
 import { GetServerSideProps } from 'next';
 import HomePage from '../components/home/home-page/HomePage';
+import { fetchGraphQL } from '../utils/fetchGraphQL';
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const FEATURED_IDS = process.env.FEATURED_IDS?.split(',').filter(Boolean);
@@ -7,32 +8,28 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
   if (FEATURED_IDS && FEATURED_IDS.length > 0) {
     try {
-      const res = await fetch(process.env.NEXT_PUBLIC_GRAPHQL_URL!, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query: `
-            query GetProducts($ids: [ID!]!) {
-              products(ids: $ids) {
-                id
-                name
-                price
-                imageUrl
-                description
-                category
-                stock
-                createdAt
-              }
-            }
-          `,
-          variables: { ids: FEATURED_IDS },
-        }),
-      });
-      const data = await res.json();
-      if (data.data?.products) {
-        featured.push(...data.data.products);
+      const data = await fetchGraphQL<{ products: any[] }>(`
+        query GetProducts($ids: [ID!]!) {
+          products(ids: $ids) {
+            id
+            name
+            price
+            imageUrl
+            description
+            category
+            stock
+            createdAt
+          }
+        }
+      `, { ids: FEATURED_IDS });
+
+      if (data?.products) {
+        featured.push(...data.products);
       }
-    } catch (e) { }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error('Error fetching featured products in getServerSideProps:', errorMessage);
+    }
   }
 
   return {

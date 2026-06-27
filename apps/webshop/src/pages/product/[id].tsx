@@ -1,8 +1,10 @@
 import { GetServerSideProps } from 'next';
 import ProductPage from '../../components/product/product-page/ProductPage';
+import { fetchGraphQL } from '../../utils/fetchGraphQL';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const id = context.params?.id;
+  const rawId = context.params?.id;
+  const id = Array.isArray(rawId) ? rawId[0] : rawId;
 
   if (!id) {
     return {
@@ -13,29 +15,22 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   try {
-    const res = await fetch(process.env.NEXT_PUBLIC_GRAPHQL_URL!, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        query: `
-          query GetProduct($id: ID!) {
-            product(id: $id) {
-              id
-              name
-              description
-              price
-              category
-              imageUrl
-              stock
-              createdAt
-            }
-          }
-        `,
-        variables: { id },
-      }),
-    });
-    const data = await res.json();
-    const product = data.data?.product || null;
+    const data = await fetchGraphQL<{ product: any }>(`
+      query GetProduct($id: ID!) {
+        product(id: $id) {
+          id
+          name
+          description
+          price
+          category
+          imageUrl
+          stock
+          createdAt
+        }
+      }
+    `, { id });
+
+    const product = data?.product || null;
 
     return {
       props: {
@@ -43,7 +38,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   } catch (error) {
-    console.error('Error fetching product in getServerSideProps:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Error fetching product in getServerSideProps:', errorMessage);
+    
     return {
       props: {
         product: null,

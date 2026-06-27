@@ -5,29 +5,57 @@ import { useCartStore } from '../../../store/useCartStore';
 import { SearchDialog } from '../search/search-dialog/SearchDialog';
 import { CartIcon } from '../cart-icon/CartIcon';
 import styles from './Header.module.css';
+import { fetchGraphQL } from '../../../utils/fetchGraphQL';
 
-interface HeaderProps {
-  query: string;
-  setQuery: (q: string) => void;
-  results: any[];
-  isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
-}
-
-export function Header({
-  query,
-  setQuery,
-  results,
-  isOpen,
-  setIsOpen,
-}: HeaderProps) {
+export function Header() {
   const router = useRouter();
   const totalItems = useCartStore(state => state.totalItems);
   const [mounted, setMounted] = useState(false);
+  
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<any[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    setIsOpen(results.length > 0);
+  }, [results]);
+
+  useEffect(() => {
+    if (!query) {
+      setResults([]);
+      return;
+    }
+
+    const fetchResults = async () => {
+      try {
+        const data = await fetchGraphQL<{ searchProducts: any[] }>(`
+          query Search($q: String!) {
+            searchProducts(query: $q) {
+              id
+              name
+              price
+              imageUrl
+              description
+              stock
+              createdAt
+            }
+          }
+        `, { q: query });
+
+        if (data?.searchProducts) {
+          setResults(data.searchProducts.slice(0, 5));
+        }
+      } catch (error) {
+        console.error('Error fetching search results in Header:', error);
+      }
+    };
+
+    fetchResults();
+  }, [query]);
 
   useEffect(() => {
     const handleOutsideClick = () => {
@@ -37,7 +65,7 @@ export function Header({
     return () => {
       document.removeEventListener('click', handleOutsideClick);
     };
-  }, [setIsOpen]);
+  }, []);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && query.trim()) {

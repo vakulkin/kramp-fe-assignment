@@ -1,17 +1,20 @@
 import { useState, useEffect } from 'react';
 import { useCartStore } from '../store/useCartStore';
 import CheckoutPage from '../components/checkout/checkout-page/CheckoutPage';
+import { fetchGraphQL } from '../utils/fetchGraphQL';
 
 export default function CheckoutRoute() {
   const items = useCartStore(state => state.cart);
   const clearCart = useCartStore(state => state.clearCart);
   const removeFromCart = useCartStore(state => state.removeFromCart);
-  
+
   const [placedOrder, setPlacedOrder] = useState<any>(null);
   const [cartDetails, setCartDetails] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -24,12 +27,12 @@ export default function CheckoutRoute() {
       return;
     }
 
-    setIsLoading(true);
-    fetch(process.env.NEXT_PUBLIC_GRAPHQL_URL!, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        query: `
+    const fetchCartDetails = async () => {
+      setIsLoading(true);
+      setError(null);
+      
+      try {
+        const data = await fetchGraphQL<{ cartDetails: any }>(`
           query GetCartDetails($items: [CartItemInput!]!) {
             cartDetails(items: $items) {
               items {
@@ -45,21 +48,17 @@ export default function CheckoutRoute() {
               grandTotal
             }
           }
-        `,
-        variables: {
+        `, {
           items: items.map((i: any) => ({
             productId: i.productId,
             quantity: i.quantity,
           })),
-        },
-      }),
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.data?.cartDetails) {
-          const fetchedItems = data.data.cartDetails.items;
+        });
+
+        if (data?.cartDetails) {
+          const fetchedItems = data.cartDetails.items;
           const validProductIds = new Set(fetchedItems.map((i: any) => i.productId));
-          
+
           let removedCount = 0;
           items.forEach((localItem: any) => {
             if (!validProductIds.has(localItem.productId)) {
@@ -72,75 +71,75 @@ export default function CheckoutRoute() {
             window.alert(`${removedCount} item(s) were removed from your cart because they are out of stock.`);
           }
 
-          setCartDetails(data.data.cartDetails);
+          setCartDetails(data.cartDetails);
         }
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        console.error('Error fetching cart details:', errorMessage);
+        setError(errorMessage);
+      } finally {
         setIsLoading(false);
-      })
-      .catch(err => {
-        console.error('Error fetching cart details:', err);
-        setIsLoading(false);
-      });
-  }, [items]);
+      }
+    };
 
-  const handlePlaceOrder = () => {
+    fetchCartDetails();
+  }, [items, mounted]);
+
+  const handlePlaceOrder = async () => {
     if (items.length === 0 || isPlacingOrder) return;
 
     setIsPlacingOrder(true);
-    fetch(process.env.NEXT_PUBLIC_GRAPHQL_URL!, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        query: `
-          mutation PlaceOrder($items: [CartItemInput!]!) {
-            createOrder(items: $items) {
-              id
-              items {
-                productId
-                name
-                price
-                quantity
-                total
-              }
-              subtotal
-              tax
-              shipping
-              grandTotal
+    setError(null);
+
+    try {
+      const data = await fetchGraphQL<{ createOrder: any }>(`
+        mutation PlaceOrder($items: [CartItemInput!]!) {
+          createOrder(items: $items) {
+            id
+            items {
+              productId
+              name
+              price
+              quantity
+              total
             }
+            subtotal
+            tax
+            shipping
+            grandTotal
           }
-        `,
-        variables: {
-          items: items.map((i: any) => ({
-            productId: i.productId,
-            quantity: i.quantity,
-          })),
-        },
-      }),
-    })
-      .then(res => res.json())
-      .then(data => {
-        const order = data.data?.createOrder;
-        if (order) {
-          console.log(
-            'order subtotal:',
-            order.subtotal.toFixed(2),
-            '| VAT (21%):',
-            order.tax.toFixed(2),
-            '| shipping:',
-            order.shipping.toFixed(2),
-            '| grand total:',
-            order.grandTotal.toFixed(2),
-            '| order id (uuidv7):',
-            order.id
-          );
-          setPlacedOrder(order);
-          clearCart();
         }
-        setIsPlacingOrder(false);
-      })
-      .catch(err => {
-        console.error('Error placing order:', err);
-        setIsPlacingOrder(false);
+      `, {
+        items: items.map((i: any) => ({
+          productId: i.productId,
+          quantity: i.quantity,
+        })),
       });
+
+      const order = data?.createOrder;
+      if (order) {
+        console.log(
+          'order subtotal:',
+          order.subtotal.toFixed(2),
+          '| VAT (21%):',
+          order.tax.toFixed(2),
+          '| shipping:',
+          order.shipping.toFixed(2),
+          '| grand total:',
+          order.grandTotal.toFixed(2),
+          '| order id (uuidv7):',
+          order.id
+        );
+        setPlacedOrder(order);
+        clearCart();
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error('Error placing order:', errorMessage);
+      setError(errorMessage);
+    } finally {
+      setIsPlacingOrder(false);
+    }
   };
 
   if (!mounted) return null;
@@ -154,6 +153,7 @@ export default function CheckoutRoute() {
       isPlacingOrder={isPlacingOrder}
       onPlaceOrder={handlePlaceOrder}
       onRemove={removeFromCart}
+      error={error}
     />
   );
 }
