@@ -5,7 +5,7 @@ import { CartItem } from '../types';
 interface CartStore {
   cart: CartItem[];
   totalItems: number;
-  addToCart: (item: { productId: string }) => void;
+  addToCart: (item: { productId: string, stock: number }) => void;
   removeFromCart: (productId: string) => void;
   clearCart: () => void;
 }
@@ -19,12 +19,23 @@ export const useCartStore = create<CartStore>()(
         const existingIndex = state.cart.findIndex((i) => i.productId === item.productId);
 
         if (existingIndex !== -1) {
+          const currentQuantity = state.cart[existingIndex].quantity;
+          if (currentQuantity >= item.stock) {
+            window.alert('Cannot add more of this item to the cart. Out of stock.');
+            return state;
+          }
+
           const newCart = [...state.cart];
           newCart[existingIndex] = {
             ...newCart[existingIndex],
-            quantity: newCart[existingIndex].quantity + 1,
+            quantity: currentQuantity + 1,
           };
           return { cart: newCart, totalItems: state.totalItems + 1 };
+        }
+
+        if (item.stock <= 0) {
+          window.alert('Cannot add more of this item to the cart. Out of stock.');
+          return state;
         }
 
         return {

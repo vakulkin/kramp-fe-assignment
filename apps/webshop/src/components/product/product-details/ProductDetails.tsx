@@ -1,5 +1,6 @@
 import { SEO } from '../../widgets/seo/SEO';
 import { formatPrice } from '../../../utils/formatPrice';
+import { useCartStore } from '../../../store/useCartStore';
 import styles from './ProductDetails.module.css';
 
 interface ProductDetailsProps {
@@ -13,10 +14,11 @@ interface ProductDetailsProps {
     stock: number;
     createdAt: string;
   };
-  onAddToCart: () => void;
 }
 
-export default function ProductDetails({ product, onAddToCart }: ProductDetailsProps) {
+export default function ProductDetails({ product }: ProductDetailsProps) {
+  const addToCart = useCartStore(state => state.addToCart);
+
   return (
     <>
       <SEO 
@@ -43,7 +45,7 @@ export default function ProductDetails({ product, onAddToCart }: ProductDetailsP
         </p>
         <div
           className={`${styles.addToCart} ${product.stock <= 0 ? styles.disabled : ''}`}
-          onClick={onAddToCart}
+          onClick={() => addToCart({ productId: product.id, stock: product.stock })}
         >
           {product.stock > 0 ? 'Add to cart' : 'Out of stock'}
         </div>
