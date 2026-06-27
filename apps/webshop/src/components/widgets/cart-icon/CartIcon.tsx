@@ -6,13 +6,12 @@ interface CartIconProps {
 }
 
 export function CartIcon({ count }: CartIconProps) {
-  const label = count > 0 ? `Cart (${count})` : 'Cart';
-
   return (
     <Link
       href="/checkout"
       className={styles.cartIcon}
     >
+      <span className={styles.label}>Cart</span>
       {count > 0 && (
         <span className={styles.badge}>{count}</span>
       )}

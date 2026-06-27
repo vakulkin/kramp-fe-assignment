@@ -1,25 +1,26 @@
+import Link from 'next/link';
 import styles from './SearchDialog.module.css';
 import { formatPrice } from '../../../../utils/formatPrice';
+import { useSearchStore } from '../../../../store/useSearchStore';
 
-interface SearchDialogProps {
-  results: any[];
-  onSelect: (id: string) => void;
-}
+export function SearchDialog() {
+  const { results, resetSearch } = useSearchStore();
 
-export function SearchDialog({ results, onSelect }: SearchDialogProps) {
   if (!results.length) return null;
 
   return (
     <div className={styles.dialog}>
       {results.map((result) => (
-        <div
+        <Link
           key={result.id}
+          href={`/product/${result.id}`}
           className={styles.item}
-          onClick={() => onSelect(result.id)}
+          onClick={() => resetSearch()}
+          style={{ textDecoration: 'none' }}
         >
           <span className={styles.itemName}>{result.name}</span>
           <span className={styles.itemPrice}>{formatPrice(result.price)}</span>
-        </div>
+        </Link>
       ))}
     </div>
   );

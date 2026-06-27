@@ -16,91 +16,11 @@
   flex-wrap: wrap;
 }
 
-.logo {
-  font-size: 22px;
-  font-weight: 800;
-  color: #e63329;
-  text-decoration: none;
-  letter-spacing: -0.5px;
-  flex-shrink: 0;
-}
-
-.nav {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.navLink {
-  font-size: 14px;
-  color: #333;
-  text-decoration: none;
-}
-
-.navLink:hover {
-  color: #e63329;
-}
-
-.activeLink {
-  font-size: 14px;
-  color: #e63329;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.searchWrapper {
-  position: relative;
-  flex: 1;
-  max-width: 400px;
-  margin-left: auto;
-}
-
-.searchInput {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-  outline: none;
-}
-
-.searchInput:focus {
-  border-color: #e63329;
-}
-
-.truncatedHint {
-  display: block;
-  font-size: 11px;
-  color: #999;
-  margin-top: 2px;
-}
-
 @media (max-width: 768px) {
   .inner {
     padding: 12px;
     gap: 12px;
     justify-content: space-between;
   }
-  
-  .logo {
-    font-size: 20px;
-  }
-  
-  .nav {
-    gap: 12px;
-    flex-wrap: nowrap;
-    flex: 1;
-    justify-content: center;
-  }
-  
-  .navLink, .activeLink {
-    font-size: 13px;
-  }
-  
-  .searchWrapper {
-    min-width: 100%;
-    order: 4;
-    margin-top: 4px;
-    margin-left: 0;
-  }
 }
+

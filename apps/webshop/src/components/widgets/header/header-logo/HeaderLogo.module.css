@@ -1,0 +1,14 @@
+.logo {
+  font-size: 22px;
+  font-weight: 800;
+  color: #e63329;
+  text-decoration: none;
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .logo {
+    font-size: 20px;
+  }
+}
