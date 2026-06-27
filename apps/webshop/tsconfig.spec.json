@@ -1,9 +1,8 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../dist/out-tsc",
     "module": "commonjs",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "types": ["jest", "node"]
   },
   "include": [
@@ -11,6 +10,8 @@
     "jest.config.cts",
     "src/**/*.spec.ts",
     "src/**/*.spec.tsx",
-    "src/**/*.d.ts"
+    "src/**/*.d.ts",
+    "specs/**/*.spec.ts",
+    "specs/**/*.spec.tsx"
   ]
 }

@@ -1,8 +1,10 @@
 import { composePlugins, withNx } from '@nx/next';
-import { WithNxOptions } from '@nx/next/plugins/with-nx';
+import type { NextConfig } from 'next';
+import type { WithNxOptions } from '@nx/next/plugins/with-nx';
 
-const nextConfig: WithNxOptions = {
+const nextConfig: WithNxOptions & NextConfig = {
   nx: {},
+  reactStrictMode: true,
   images: {
     remotePatterns: [
       {

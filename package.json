@@ -6,7 +6,9 @@
     "dev:webshop": "nx dev webshop",
     "dev:server": "nx serve server",
     "dev": "nx run-many --targets=serve,dev --projects=server,webshop --parallel",
-    "storybook": "nx run webshop:storybook"
+    "test": "cd apps/webshop && jest --config=jest.config.ts",
+    "test:watch": "cd apps/webshop && jest --config=jest.config.ts --watch",
+    "storybook": "cd apps/webshop && npx storybook dev -p 6006"
   },
   "devDependencies": {
     "@nx/esbuild": "22.6.5",
