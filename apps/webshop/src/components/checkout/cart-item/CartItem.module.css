@@ -54,3 +54,15 @@
   color: #e63329;
   background-color: #ffebeb;
 }
+
+@media (max-width: 768px) {
+  .item {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  .itemMainInfo {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+}

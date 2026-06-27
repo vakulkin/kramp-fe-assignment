@@ -13,6 +13,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 12px 24px;
+  flex-wrap: wrap;
 }
 
 .logo {
@@ -27,6 +28,7 @@
 .nav {
   display: flex;
   gap: 20px;
+  flex-wrap: wrap;
 }
 
 .navLink {
@@ -71,4 +73,34 @@
   font-size: 11px;
   color: #999;
   margin-top: 2px;
+}
+
+@media (max-width: 768px) {
+  .inner {
+    padding: 12px;
+    gap: 12px;
+    justify-content: space-between;
+  }
+  
+  .logo {
+    font-size: 20px;
+  }
+  
+  .nav {
+    gap: 12px;
+    flex-wrap: nowrap;
+    flex: 1;
+    justify-content: center;
+  }
+  
+  .navLink, .activeLink {
+    font-size: 13px;
+  }
+  
+  .searchWrapper {
+    min-width: 100%;
+    order: 4;
+    margin-top: 4px;
+    margin-left: 0;
+  }
 }

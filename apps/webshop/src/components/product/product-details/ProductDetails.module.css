@@ -75,3 +75,10 @@
 .addToCart:hover {
   background: #c42820;
 }
+
+@media (max-width: 768px) {
+  .inner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
