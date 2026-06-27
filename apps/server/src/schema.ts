@@ -187,9 +187,9 @@ builder.queryType({
         ids: t.arg.idList({ required: true }),
       },
       resolve: async (_root, args) => {
+        await new Promise(r => setTimeout(r, 800));
         const results: Product[] = [];
         for (const id of args.ids) {
-          await new Promise(r => setTimeout(r, 800));
           const product = getProductById(id);
           if (product) results.push(product);
         }

@@ -1,62 +1,38 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import _ from 'lodash';
 import { CartContext } from '../../../pages/_app';
 import { SearchDialog } from '../search/search-dialog/SearchDialog';
 import { CartIcon } from '../cart-icon/CartIcon';
-import { useDebounce } from '../../../hooks/useDebounce';
 import styles from './Header.module.css';
 
-export function Header() {
+interface HeaderProps {
+  query: string;
+  setQuery: (q: string) => void;
+  results: any[];
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+export function Header({
+  query,
+  setQuery,
+  results,
+  isOpen,
+  setIsOpen,
+}: HeaderProps) {
   const router = useRouter();
   const { cart } = useContext(CartContext);
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState<any[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    setIsOpen(results.length > 0);
-  }, [results]);
-
-  useEffect(() => {
-    if (!query) {
-      setResults([]);
-      return;
-    }
-
-    fetch(process.env.NEXT_PUBLIC_GRAPHQL_URL!, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        query: `
-          query Search($q: String!) {
-            searchProducts(query: $q) {
-              id
-              name
-              price
-              imageUrl
-              description
-              stock
-              createdAt
-            }
-          }
-        `,
-        variables: { q: query },
-      }),
-    })
-      .then(res => res.json())
-      .then(data => {
-        setResults(data.data.searchProducts.slice(0, 5));
-      });
-  }, [query]);
 
   useEffect(() => {
     const handleOutsideClick = () => {
       setIsOpen(false);
     };
     document.addEventListener('click', handleOutsideClick);
-  }, []);
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, [setIsOpen]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && query.trim()) {
@@ -69,7 +45,7 @@ export function Header() {
     return router.pathname.indexOf(path) !== -1;
   };
 
-  const truncatedQuery = query.substr(0, 30);
+  const truncatedQuery = query.substring(0, 30);
 
   return (
     <header className={styles.header}>
@@ -129,3 +105,4 @@ export function Header() {
     </header>
   );
 }
+

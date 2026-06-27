@@ -2,18 +2,18 @@ import { GetServerSideProps } from 'next';
 import HomePage from '../components/home/home-page/HomePage';
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const FEATURED_IDS = ['1', '4', '11', '17'];
+  const FEATURED_IDS = process.env.FEATURED_IDS?.split(',').filter(Boolean);
   const featured = [];
 
-  for (const id of FEATURED_IDS) {
+  if (FEATURED_IDS && FEATURED_IDS.length > 0) {
     try {
       const res = await fetch(process.env.NEXT_PUBLIC_GRAPHQL_URL!, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           query: `
-            query GetProduct($id: ID!) {
-              product(id: $id) {
+            query GetProducts($ids: [ID!]!) {
+              products(ids: $ids) {
                 id
                 name
                 price
@@ -25,12 +25,12 @@ export const getServerSideProps: GetServerSideProps = async () => {
               }
             }
           `,
-          variables: { id },
+          variables: { ids: FEATURED_IDS },
         }),
       });
       const data = await res.json();
-      if (data.data?.product) {
-        featured.push(data.data.product);
+      if (data.data?.products) {
+        featured.push(...data.data.products);
       }
     } catch (e) { }
   }
