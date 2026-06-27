@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { fetchGraphQL } from '../../../../utils/fetchGraphQL';
 import { SearchDialog } from '../search-dialog/SearchDialog';
 import { useSearchStore } from '../../../../store/useSearchStore';
 import styles from './HeaderSearch.module.css';
@@ -9,47 +8,7 @@ export function HeaderSearch() {
   const router = useRouter();
   const { query, results, isOpen, setQuery, setResults, setIsOpen } = useSearchStore();
 
-  useEffect(() => {
-    if (!query) {
-      setResults([]);
-      setIsOpen(false);
-      return;
-    }
-
-    let ignore = false;
-    const fetchResults = async () => {
-      try {
-        const data = await fetchGraphQL<{ searchProducts: any[] }>(`
-          query Search($q: String!) {
-            searchProducts(query: $q) {
-              id
-              name
-              price
-              imageUrl
-              description
-              stock
-              createdAt
-            }
-          }
-        `, { q: query });
-
-        if (!ignore && data?.searchProducts) {
-          const res = data.searchProducts.slice(0, 5);
-          setResults(res);
-          setIsOpen(res.length > 0);
-        }
-      } catch (error) {
-        console.error('Error fetching search results in Header:', error);
-      }
-    };
-
-    fetchResults();
-
-    return () => {
-      ignore = true;
-    };
-  }, [query, setResults, setIsOpen]);
-
+  // Data fetching is now handled seamlessly inside the store when setQuery is called.
   useEffect(() => {
     const handleOutsideClick = () => {
       setIsOpen(false);
