@@ -8,8 +8,6 @@ import { CartIcon } from './cartIcon';
 import { useDebounce } from '../hooks/useDebounce';
 import styles from './Header.module.css';
 
-var GRAPHQL_URL = 'http://localhost:4000/graphql';
-
 export function Header() {
   const router = useRouter();
   const { cart } = useContext(CartContext);
@@ -27,7 +25,7 @@ export function Header() {
       return;
     }
 
-    fetch(GRAPHQL_URL, {
+    fetch(process.env.NEXT_PUBLIC_GRAPHQL_URL!, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

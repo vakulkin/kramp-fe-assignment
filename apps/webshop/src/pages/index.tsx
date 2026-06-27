@@ -8,7 +8,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
   for (const id of FEATURED_IDS) {
     try {
-      const res = await fetch('http://localhost:4000/graphql', {
+      const res = await fetch(process.env.NEXT_PUBLIC_GRAPHQL_URL!, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -33,7 +33,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
       if (data.data?.product) {
         featured.push(data.data.product);
       }
-    } catch (e) {}
+    } catch (e) { }
   }
 
   return {

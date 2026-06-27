@@ -3,8 +3,6 @@ import { useContext, useEffect, useState } from 'react';
 import { CartContext } from '../_app';
 import styles from './[id].module.css';
 
-var GRAPHQL_URL = 'http://localhost:4000/graphql';
-
 export default function ProductPage() {
   const router = useRouter();
   const { cart } = useContext(CartContext) as any;
@@ -12,7 +10,7 @@ export default function ProductPage() {
   useEffect(() => {
     if (!router.query.id) return;
 
-    fetch(GRAPHQL_URL, {
+    fetch(process.env.NEXT_PUBLIC_GRAPHQL_URL!, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

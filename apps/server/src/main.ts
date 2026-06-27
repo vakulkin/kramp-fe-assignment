@@ -16,5 +16,5 @@ const yoga = createYoga({
 const server = createServer(yoga);
 
 server.listen(4000, () => {
-  console.log('Visit http://localhost:4000/graphql');
+  console.log(`Visit ${process.env.NEXT_PUBLIC_GRAPHQL_URL!}`);
 });

@@ -15,7 +15,7 @@ export default function SearchPage() {
 
     setIsLoading(true);
 
-    fetch('http://localhost:4000/graphql', {
+    fetch(process.env.NEXT_PUBLIC_GRAPHQL_URL!, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
