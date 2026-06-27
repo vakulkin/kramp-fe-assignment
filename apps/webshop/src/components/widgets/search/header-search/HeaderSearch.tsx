@@ -62,7 +62,7 @@ export function HeaderSearch() {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && query.trim()) {
-      router.push('/search?q=' + encodeURIComponent(query));
+      router.push(`/search/${encodeURIComponent(query)}`);
       setIsOpen(false);
     }
   };

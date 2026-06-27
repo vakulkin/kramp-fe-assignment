@@ -1,10 +1,23 @@
-import { GetServerSideProps } from 'next';
-import SearchPage from '../components/search/search-page/SearchPage';
-import { fetchGraphQL } from '../utils/fetchGraphQL';
+import { GetStaticProps, GetStaticPaths } from 'next';
+import SearchPage from '../../components/search/search-page/SearchPage';
+import { fetchGraphQL } from '../../utils/fetchGraphQL';
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const rawQ = context.query.q;
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  };
+};
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  const rawQ = context.params?.q;
   const q = Array.isArray(rawQ) ? rawQ[0] : (rawQ || '');
+
+  if (!q) {
+    return {
+      notFound: true,
+    };
+  }
 
   try {
     const data = await fetchGraphQL<{ searchProducts: any[] }>(`
@@ -29,16 +42,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         query: q,
         results,
       },
+      revalidate: 60,
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Error fetching search results in getServerSideProps:', errorMessage);
+    console.error('Error fetching search results in getStaticProps:', errorMessage);
     
     return {
       props: {
         query: q,
         results: [],
       },
+      revalidate: 60,
     };
   }
 };

@@ -1,8 +1,8 @@
-import { GetServerSideProps } from 'next';
+import { GetStaticProps } from 'next';
 import HomePage from '../components/home/home-page/HomePage';
 import { fetchGraphQL } from '../utils/fetchGraphQL';
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const featured = [];
 
   try {
@@ -26,13 +26,14 @@ export const getServerSideProps: GetServerSideProps = async () => {
     }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Error fetching featured products in getServerSideProps:', errorMessage);
+    console.error('Error fetching featured products in getStaticProps:', errorMessage);
   }
 
   return {
     props: {
       featured,
     },
+    revalidate: 60,
   };
 };
 
