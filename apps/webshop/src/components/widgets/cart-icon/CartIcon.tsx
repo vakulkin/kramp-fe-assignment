@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 import styles from './CartIcon.module.css';
 
 interface CartIconProps {
@@ -6,18 +6,16 @@ interface CartIconProps {
 }
 
 export function CartIcon({ count }: CartIconProps) {
-  const router = useRouter();
   const label = count > 0 ? `Cart (${count})` : 'Cart';
 
   return (
-    <div
-      onClick={() => router.push('/checkout')}
+    <Link
+      href="/checkout"
       className={styles.cartIcon}
     >
-      <span className={styles.label}>{label}</span>
       {count > 0 && (
         <span className={styles.badge}>{count}</span>
       )}
-    </div>
+    </Link>
   );
 }
