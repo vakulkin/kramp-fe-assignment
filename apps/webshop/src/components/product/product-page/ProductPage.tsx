@@ -7,10 +7,19 @@ interface ProductPageProps {
 }
 
 export default function ProductPage({ product }: ProductPageProps) {
+  const cart = useCartStore(state => state.cart);
   const addToCart = useCartStore(state => state.addToCart);
 
   const handleAddToCart = () => {
     if (!product) return;
+
+    const cartItem = cart.find(i => i.productId === product.id);
+    const currentQuantity = cartItem ? cartItem.quantity : 0;
+
+    if (currentQuantity >= product.stock) {
+      window.alert('Cannot add more of this item to the cart. Out of stock.');
+      return;
+    }
 
     addToCart({
       productId: product.id,

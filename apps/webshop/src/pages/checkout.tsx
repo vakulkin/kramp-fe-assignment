@@ -57,6 +57,21 @@ export default function CheckoutRoute() {
       .then(res => res.json())
       .then(data => {
         if (data.data?.cartDetails) {
+          const fetchedItems = data.data.cartDetails.items;
+          const validProductIds = new Set(fetchedItems.map((i: any) => i.productId));
+          
+          let removedCount = 0;
+          items.forEach((localItem: any) => {
+            if (!validProductIds.has(localItem.productId)) {
+              removeFromCart(localItem.productId);
+              removedCount++;
+            }
+          });
+
+          if (removedCount > 0) {
+            window.alert(`${removedCount} item(s) were removed from your cart because they are out of stock.`);
+          }
+
           setCartDetails(data.data.cartDetails);
         }
         setIsLoading(false);

@@ -111,7 +111,7 @@ export function computeCartTotals(items: CartItemInputType[]): CartDetails {
 
   for (const item of items) {
     const product = getProductById(item.productId);
-    if (product) {
+    if (product && product.stock > 0) {
       const total = product.price * item.quantity;
       itemDetails.push({
         productId: product.id,

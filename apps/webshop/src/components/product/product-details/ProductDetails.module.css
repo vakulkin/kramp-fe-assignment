@@ -72,8 +72,13 @@
   margin-top: 8px;
 }
 
-.addToCart:hover {
+.addToCart:hover:not(.disabled) {
   background: #c42820;
+}
+
+.addToCart.disabled {
+  background: #ccc;
+  cursor: not-allowed;
 }
 
 @media (max-width: 768px) {

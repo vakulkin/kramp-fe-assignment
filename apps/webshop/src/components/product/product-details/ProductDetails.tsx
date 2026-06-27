@@ -35,8 +35,11 @@ export default function ProductDetails({ product, onAddToCart }: ProductDetailsP
           {' · '}
           {product.stock} in stock
         </p>
-        <div className={styles.addToCart} onClick={onAddToCart}>
-          Add to cart
+        <div
+          className={`${styles.addToCart} ${product.stock <= 0 ? styles.disabled : ''}`}
+          onClick={onAddToCart}
+        >
+          {product.stock > 0 ? 'Add to cart' : 'Out of stock'}
         </div>
       </div>
     </div>
