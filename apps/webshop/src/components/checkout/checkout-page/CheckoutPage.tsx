@@ -1,3 +1,4 @@
+import { SEO } from '../../widgets/seo/SEO';
 import { CartItemDetail } from '../cart-item/CartItem';
 import OrderConfirmation from '../order-confirmation/OrderConfirmation';
 import EmptyCart from '../empty-cart/EmptyCart';
@@ -35,12 +36,19 @@ export default function CheckoutPage({
   error,
 }: CheckoutPageProps) {
   if (placedOrder) {
-    return <OrderConfirmation placedOrder={placedOrder} />;
+    return (
+      <>
+        <SEO title="Order Confirmed | Kramp Webshop" description="Your order has been successfully placed." />
+        <OrderConfirmation placedOrder={placedOrder} />
+      </>
+    );
   }
 
   return (
-    <div className={styles.page}>
-      <div className={styles.inner}>
+    <>
+      <SEO title="Checkout | Kramp Webshop" description="Review your items and place your order." />
+      <div className={styles.page}>
+        <div className={styles.inner}>
         <h1 className={styles.heading}>Checkout</h1>
 
         {items.length === 0 ? (
@@ -74,6 +82,6 @@ export default function CheckoutPage({
         )}
       </div>
     </div>
+    </>
   );
 }
-

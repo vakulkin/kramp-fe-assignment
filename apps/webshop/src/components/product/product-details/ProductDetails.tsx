@@ -1,3 +1,4 @@
+import { SEO } from '../../widgets/seo/SEO';
 import { formatPrice } from '../../../utils/formatPrice';
 import styles from './ProductDetails.module.css';
 
@@ -17,7 +18,12 @@ interface ProductDetailsProps {
 
 export default function ProductDetails({ product, onAddToCart }: ProductDetailsProps) {
   return (
-    <div className={styles.inner}>
+    <>
+      <SEO 
+        title={`${product.name} | Kramp Webshop`}
+        description={product.description} 
+      />
+      <div className={styles.inner}>
       <div className={styles.imageWrapper}>
         <img
           src={product.imageUrl}
@@ -43,5 +49,6 @@ export default function ProductDetails({ product, onAddToCart }: ProductDetailsP
         </div>
       </div>
     </div>
+    </>
   );
 }
