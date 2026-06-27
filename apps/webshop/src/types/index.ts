@@ -20,7 +20,7 @@ export interface SearchResult {
   stock: number;
 }
 
-export type ProductCategory = 'Tools' | 'Fasteners' | 'Safety Equipment' | 'Power Tools';
+export type ProductCategory = string;
 
 export interface CartItem {
   productId: string;
