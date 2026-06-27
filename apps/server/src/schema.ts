@@ -1,7 +1,6 @@
 import SchemaBuilder from '@pothos/core';
 import { v7 as uuidv7 } from 'uuid';
 import { User, Product, getProductById, searchProducts } from './data';
-
 export const builder = new SchemaBuilder<{
   Objects: { Product: Product };
 }>({});

@@ -1,4 +1,5 @@
 import styles from './SearchDialog.module.css';
+import { formatPrice } from '../../../../utils/formatPrice';
 
 interface SearchDialogProps {
   results: any[];
@@ -17,7 +18,7 @@ export function SearchDialog({ results, onSelect }: SearchDialogProps) {
           onClick={() => onSelect(result.id)}
         >
           <span className={styles.itemName}>{result.name}</span>
-          <span className={styles.itemPrice}>€{result.price.toFixed(2)}</span>
+          <span className={styles.itemPrice}>{formatPrice(result.price)}</span>
         </div>
       ))}
     </div>

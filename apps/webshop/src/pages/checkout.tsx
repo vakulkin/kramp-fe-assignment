@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useCartStore } from '../store/useCartStore';
 import CheckoutPage from '../components/checkout/checkout-page/CheckoutPage';
 import { fetchGraphQL } from '../utils/fetchGraphQL';
-
+import { formatPrice } from '../utils/formatPrice';
 export default function CheckoutRoute() {
   const items = useCartStore(state => state.cart);
   const clearCart = useCartStore(state => state.clearCart);
@@ -120,13 +120,13 @@ export default function CheckoutRoute() {
       if (order) {
         console.log(
           'order subtotal:',
-          order.subtotal.toFixed(2),
+          formatPrice(order.subtotal),
           '| VAT (21%):',
-          order.tax.toFixed(2),
+          formatPrice(order.tax),
           '| shipping:',
-          order.shipping.toFixed(2),
+          formatPrice(order.shipping),
           '| grand total:',
-          order.grandTotal.toFixed(2),
+          formatPrice(order.grandTotal),
           '| order id (uuidv7):',
           order.id
         );
