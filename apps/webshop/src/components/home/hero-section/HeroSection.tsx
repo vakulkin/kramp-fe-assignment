@@ -14,6 +14,7 @@ export default function HeroSection() {
         width={1200}
         height={800}
         priority
+        unoptimized
         className={styles.heroImage}
       />
       <div className={styles.heroContent}>
