@@ -1,4 +1,4 @@
-import ProductCard from '../../shop/product-card/ProductCard';
+import ProductCard from '../product-card/ProductCard';
 import styles from './GroupedCategorySection.module.css';
 
 interface GroupedCategorySectionProps {

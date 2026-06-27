@@ -1,5 +1,5 @@
 import { storiesOf } from '@storybook/react';
-import ProductCard from '../components/shop/product-card/ProductCard';
+import ProductCard from '../components/search/product-card/ProductCard';
 
 const mockProduct = {
   id: '1',

@@ -16,6 +16,7 @@ interface CartItemProps {
 }
 
 export default function CartItem({ item, onRemove }: CartItemProps) {
+
   return (
     <div className={styles.item}>
       <div className={styles.itemMainInfo}>

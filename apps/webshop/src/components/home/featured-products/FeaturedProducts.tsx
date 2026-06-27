@@ -1,4 +1,4 @@
-import ProductCard from '../../shop/product-card/ProductCard';
+import ProductCard from '../../search/product-card/ProductCard';
 import styles from './FeaturedProducts.module.css';
 
 interface FeaturedProductsProps {
