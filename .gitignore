@@ -11,3 +11,5 @@ out
 *.env.example
 *.env.local
 *.env.staging
+
+REPORT.md
