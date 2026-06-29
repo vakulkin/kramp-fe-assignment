@@ -13,3 +13,4 @@ out
 *.env.staging
 
 REPORT.md
+REPORT.pdf
